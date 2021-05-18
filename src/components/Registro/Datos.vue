@@ -2,7 +2,7 @@
     <div>
 
         <v-form v-model="valid" ref="form">
-			<v-row class="mb-4">
+			<v-row class="mb-4 mt-1">
 				<v-col cols="12">
 					<v-text-field v-model="data.nombres" :rules="[v => !!v]" autocomplete="off" hide-details outlined label="Nombres"></v-text-field>
 				</v-col>
@@ -22,10 +22,10 @@
 					<v-text-field v-model="data.email" :rules="[v => !!v]" autocomplete="off" hide-details outlined label="Correo Electrónico"></v-text-field>
 				</v-col>
 				<v-col cols="12">
-					<v-text-field v-model="data.password" :rules="[v => !!v]" type="password" autocomplete="off" hide-details outlined label="Contraseña"></v-text-field>
+					<v-text-field @click:append="() => { data.show_pass = !data.show_pass }" :append-icon="!data.show_pass ? 'mdi-eye' : 'mdi-eye-off'" v-model="data.password" :rules="[v => !!v]" :type="!data.show_pass ? 'password' : 'text'" autocomplete="off" hide-details outlined label="Contraseña"></v-text-field>
 				</v-col>
 				<v-col cols="12">
-					<v-text-field v-model="data.repite_password" :rules="[v => !!v]" type="password" autocomplete="off" hide-details outlined label="Repita su contraseña"></v-text-field>
+					<v-text-field @click:append="() => { data.show_repite_pass = !data.show_repite_pass }" :append-icon="!data.show_repite_pass ? 'mdi-eye' : 'mdi-eye-off'" v-model="data.repite_password" :rules="[v => !!v]" :type="!data.show_repite_pass ? 'password' : 'text'" autocomplete="off" hide-details outlined label="Repita su contraseña"></v-text-field>
 				</v-col>
 				<v-col cols="12">
 					<v-text-field v-model="data.dpi" :rules="[v => !!v]" autocomplete="off" hide-details outlined label="DPI"></v-text-field>
@@ -47,6 +47,8 @@
 				</v-col>
 			</v-row>
 
+			<v-divider class="mt-4"></v-divider>
+
 			<v-row>
 				<v-col>
 					<v-btn @click="pasos_registro.length >= step ? forward() : registrar()" color="primary">CONTINUAR</v-btn>
@@ -60,24 +62,29 @@
 </template>
 
 <script>
+
+	import Swal from 'sweetalert2'
+
 	export default {
 		data(){
 			return{
 				step: 2,
 				valid: true,
 				data: {
-					nombres: 'Herson',
-					apellidos: 'Chur',
-					sexo: 'H',
-					telefono: '44522476',
-					direccion: '14 Avenida A 12-74',
-					email: 'gerson.roely@gmail.com',
-					password: '123',
-					repite_password: '123',
-					dpi: '123',
-					representacion_legal: '123',
-					carne_abogado: '123',
-					carne_valuador: '123'
+					nombres: null,
+					apellidos: null,
+					sexo: null,
+					telefono: null,
+					direccion: null,
+					email: null,
+					password: null,
+					repite_password: null,
+					dpi: null,
+					representacion_legal: null,
+					carne_abogado: null,
+					carne_valuador: null,
+					show_pass: false,
+					show_repite_pass: false
 				},
 				sexo: [
 					{
@@ -95,34 +102,61 @@
 
 			forward(){
 				
-				this.$refs.form.validate()
+				let result = this.same_pass()
 
-				if(this.valid){
+				if (result) {
+					
+					this.$refs.form.validate()
 
-					this.$store.commit('setStep', 3)
+					if(this.valid){
 
-					this.$store.commit('setDatosFormulario', this.data)
+						this.$store.commit('setStep', 3)
+
+						this.$store.commit('setDatosFormulario', this.data)
+
+					}
 
 				}
+				
 			},
 			back(){
 				this.$store.commit('setStep', 1)
 			},
 			registrar(){
 
-				this.$refs.form.validate()
+				let result = this.same_pass()
 
-				if(this.valid){
+				if (result) {
 
+					this.$refs.form.validate()
 
-					this.$store.commit('setDatosFormulario', this.data)
+					if(this.valid){
 
-					this.$store.dispatch('createUser')
+						this.$store.commit('setDatosFormulario', this.data)
+
+						this.$store.dispatch('createUser')
+
+					}
 
 				}
 
-			}
+			},
+			same_pass(){
 
+				if (this.data.password == this.data.repite_password) {
+
+					return true
+
+				}
+
+				Swal.fire({
+					icon: 'error',
+					title: 'Error...',
+					text: 'Las contraseñas no coinciden!',
+				})
+
+
+			}
 		},
 		computed: {
 			pasos_registro(){

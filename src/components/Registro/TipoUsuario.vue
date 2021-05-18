@@ -22,6 +22,9 @@
             </v-col>
             
         </v-row>
+
+        <v-divider class="mt-4"></v-divider>
+        
         <v-row>
             <v-col>
                 <v-btn
@@ -43,7 +46,6 @@
 <script>
 
     import request from '@/functions/request.js'
-    import { mapMutations } from 'vuex'
 
     export default {
         data(){
@@ -80,8 +82,6 @@
 
             },
             continuar(){
-
-                const step = this.$store.getters.getStep
 
                 this.$store.commit('setStep', 2)
 

@@ -6,6 +6,8 @@ Vue.use(Vuex)
 import request from '@/functions/request'
 import Swal from 'sweetalert2'
 
+import router from '@/router'
+
 export default new Vuex.Store({
 
 	state: {
@@ -49,6 +51,14 @@ export default new Vuex.Store({
 		setMatricula(state, payload){
 
 			state.matriculas.push(payload)
+		},
+		removeMatricula(state, payload){
+
+			state.matriculas.splice(payload, 1)
+
+		},
+		clearMatriculas(state, payload){
+			state.matriculas = payload
 		}
 		
 	},
@@ -89,7 +99,7 @@ export default new Vuex.Store({
 			
 
 		},
-		createUser(){
+		createUser(state){
 
 			const data = {
 				url: 'registrar_solicitud',
@@ -103,18 +113,28 @@ export default new Vuex.Store({
 			request.post(data)
 			.then((response) => {
 				
-				console.log(response.data)
-
 				if (response.data.status == 200) {
-					
+
 					Swal.fire({
 						title: response.data.title,
 						text: response.data.message,
 						icon: response.data.icon,
-					}).
-					then(
-						this.$route.push({name: 'login'})
-					)
+					})
+					.then(() => {
+
+						state.commit('setStep', 1)
+						state.commit('clearMatriculas', [])
+						router.push('/')
+
+					})
+
+				}else{
+
+					Swal.fire({
+						title: response.data.title,
+						text: response.data.message,
+						icon: response.data.icon,
+					})
 
 				}
 

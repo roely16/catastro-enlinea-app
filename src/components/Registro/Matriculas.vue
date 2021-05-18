@@ -28,7 +28,7 @@
                                     <v-list-item-title>{{ matricula }}</v-list-item-title>
                                 </v-list-item-content>
                                 <v-list-item-action>
-                                    <v-btn icon>
+                                    <v-btn @click="eliminar_matricula(key)" icon>
                                         <v-icon color="error">mdi-delete</v-icon>
                                     </v-btn>
                                 </v-list-item-action>
@@ -43,6 +43,7 @@
         </v-row>
 
         <v-divider class="mt-10"></v-divider>
+        
         <v-row>
             <v-col>
                 <v-btn @click="registrar()" color="primary">CONTINUAR</v-btn>
@@ -54,6 +55,9 @@
 </template>
 
 <script>
+
+    import Swal from 'sweetalert2'
+
 	export default {
 		data(){
 			return{
@@ -71,14 +75,32 @@
             },
             registrar(){
 
-                this.$store.dispatch('createUser')
+                if (this.matriculas.length > 0) {
+                    
+                    this.$store.dispatch('createUser')
 
+
+                }else{
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: 'Debe de ingresar al menos una matricula!',
+                    })
+
+                }
+               
             },
 			back(){
 
 				this.$store.commit('setStep', 2)
 
-			}
+			},
+            eliminar_matricula(key){
+
+                this.$store.commit('removeMatricula', key)
+
+            }
 
 		},
         computed: {

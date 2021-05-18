@@ -1412,11 +1412,6 @@ div[class^="wrapper-icon"]+h3{
 /********************************************************************************
 * Footer
 ********************************************************************************/
-[class^="icon-"],
-[class*="icon-"]{
-    font-size: 50px;
-    vertical-align: middle;
-}
 h3[data-title="titulo"]{
     font-weight: 600;
     color: #030e9e !important;
