@@ -35,7 +35,7 @@
                     CONTINUAR
                 </v-btn>
 
-                <v-btn class="ml-2" text>
+                <v-btn @click="() => { this.$router.push('/') }" class="ml-2" text>
                     CANCELAR
                 </v-btn>
             </v-col>
@@ -65,7 +65,7 @@
                 
                 tipo.select = !tipo.select
                 
-                this.$store.commit('setTipoUsuario', tipo)
+                this.$store.commit('setTipoUsuario', tipo.id)
 
             },
             obtener_tipos_usuario(){
@@ -95,6 +95,9 @@
             }
         },
         created(){
+
+            // Reset proceso 
+            this.$store.dispatch('resetProceso')
 
             this.obtener_tipos_usuario()
 

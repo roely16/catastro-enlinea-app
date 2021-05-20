@@ -167,6 +167,7 @@
 			campos_especiales(){
 
 				return this.$store.getters.getCamposEspeciales
+				
 			}
 		}
 	}
