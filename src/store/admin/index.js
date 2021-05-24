@@ -1,4 +1,5 @@
 import request from '@/functions/request'
+import Swal from 'sweetalert2'
 
 const state = {
     id_solicitud: null,
@@ -96,7 +97,11 @@ const actions = {
         request.post(data)
         .then((response) => {
 
-            console.log(response.data)
+            Swal.fire({
+                title: response.data.title,
+                html: response.data.message,
+                icon: response.data.icon,
+            })
 
         })
 

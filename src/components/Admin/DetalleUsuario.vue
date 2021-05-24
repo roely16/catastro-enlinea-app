@@ -2,7 +2,14 @@
     <div>
         <v-card min-height="625">
             <v-card-text>
-                <span class="overline">Datos del Usuario</span>
+                <v-row align="center">
+                    <v-col cols="5">
+                        <span class="overline">Datos del Usuario</span>
+                    </v-col>
+                    <v-col align="end">
+                        <v-chip label small color="primary">{{ data.tipo }}</v-chip>
+                    </v-col>
+                </v-row>
             </v-card-text>
             <v-card-text v-if="data" class="mt-0 pt-0">
 
