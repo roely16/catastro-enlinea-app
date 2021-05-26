@@ -8,7 +8,11 @@ const state = {
     detalle_solicitud: {
         matriculas: [],
         historial: []
-    }
+    },
+    enable_edit: false,
+    bk_detalle_solicitud: null,
+    text_snack: null,
+    snackbar: false
 }
 
 const mutations = {
@@ -31,6 +35,19 @@ const mutations = {
 
         state.detalle_solicitud = payload
 
+    },
+    setEnableEdit(state){
+
+        state.enable_edit = !state.enable_edit
+
+    },
+    setBkDetalleSolicitud(state, payload){
+
+        state.bk_detalle_solicitud = payload
+
+    },
+    setTxtSnack(state, payload){
+        state.text_snack = payload
     }
 
 }
@@ -105,6 +122,46 @@ const actions = {
 
         })
 
+    },
+    // eslint-disable-next-line no-unused-vars
+    change_edit(state, payload){
+
+        if (!this.getters.getEnableEdit) {
+            
+            // Activar la edición y guardar bk
+
+            this.commit('setEnableEdit')
+            this.commit('setTxtSnack', 'Edición Activada')
+            this.commit('setBkDetalleSolicitud', JSON.stringify(this.getters.getDetalleSolicitud))
+
+        }else{
+
+            const data = {
+                url: 'actualizar_detalle_usuario',
+                data: this.getters.getDetalleSolicitud
+            }
+    
+            request.post(data)
+            .then((response) => {
+    
+                if (response.data) {
+                    
+                    this.commit('setEnableEdit')
+                    this.commit('setTxtSnack', 'Información Actualizada')
+
+                }
+    
+            })
+
+        }
+
+    },
+    cancel_change(){
+
+        this.commit('setEnableEdit')
+
+        this.commit('setDetalleSolicitud', JSON.parse(this.getters.getBkSolicitud))
+
     }
 
 }
@@ -113,7 +170,10 @@ const getters = {
     getCurrentSolicitud: state => state.current_solicitud,
     getSolicitudes: state => state.solicitudes,
     getIdSolicitud: state => state.id_solicitud,
-    getDetalleSolicitud: state => state.detalle_solicitud
+    getDetalleSolicitud: state => state.detalle_solicitud,
+    getEnableEdit: state => state.enable_edit,
+    getTxtSnack: state => state.text_snack,
+    getBkSolicitud: state => state.bk_detalle_solicitud
 }
 
 export default {
