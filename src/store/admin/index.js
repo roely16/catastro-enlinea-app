@@ -148,6 +148,7 @@ const actions = {
                     
                     this.commit('setEnableEdit')
                     this.commit('setTxtSnack', 'Información Actualizada')
+                    this.dispatch('detalleSolicitud')
 
                 }
     
