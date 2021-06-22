@@ -10,7 +10,7 @@
 					<v-text-field v-model="data.apellidos" :rules="[v => !!v]" autocomplete="off" hide-details outlined label="Apellidos"></v-text-field>
 				</v-col>
 				<v-col cols="6">
-					<v-select v-model="data.sexo" :rules="[v => !!v]" :items="sexo" autocomplete="off" hide-details outlined label="Sexo"></v-select>
+					<v-select v-model="data.sexo" :rules="[v => !!v]" :items="sexo" autocomplete="off" hide-details outlined label="Género"></v-select>
 				</v-col>
 				<v-col cols="6">
 					<v-text-field v-model="data.telefono" :rules="[v => !!v]" autocomplete="off" hide-details outlined label="Teléfono"></v-text-field>
@@ -35,13 +35,13 @@
 				<v-col cols="12" v-for="(campo, key) in campos_especiales" :key="key">
 					<v-row dense>
 						<v-col v-if="campo.campo == 'representacion_legal'" cols="12">
-							<v-text-field v-model="data.representacion_legal" :rules="[v => !!v]" autocomplete="off" hide-details outlined label="Representación Legal"></v-text-field>
+							<v-text-field v-model="data.representacion_legal" :rules="[v => !!v]" autocomplete="off" hide-details outlined label="Nombre de la entidad"></v-text-field>
 						</v-col>
 						<v-col v-if="campo.campo == 'carne_abogado'" cols="12">
 							<v-text-field v-model="data.carne_abogado" :rules="[v => !!v]" autocomplete="off" hide-details outlined label="Carné de Abogado"></v-text-field>
 						</v-col>
 						<v-col v-if="campo.campo == 'carne_valuador'" cols="12">
-							<v-text-field v-model="data.carne_valuador" :rules="[v => !!v]" autocomplete="off" hide-details outlined label="Carné de Valuador"></v-text-field>
+							<v-text-field v-model="data.carne_valuador" :rules="[v => !!v]" autocomplete="off" hide-details outlined label="Licencia No."></v-text-field>
 						</v-col>
 					</v-row>
 				</v-col>
