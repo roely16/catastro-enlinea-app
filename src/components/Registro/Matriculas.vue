@@ -1,27 +1,37 @@
 <template>
     <div>
-        <v-row class="mt-2" justify="center">
+        <!-- <v-row class="mt-2" justify="center">
            
-           <v-col>
+           <v-col cols="6">
                 <v-row>
                     <v-col cols="12">
-                        <v-text-field v-model="matricula" hide-details outlined label="Agregar Matricula" @click:append="matricula ? agregar() : null" append-icon="mdi-plus"></v-text-field>
+                        
                     </v-col>
                 
                 </v-row>
            </v-col>
-           <v-col>
+                  
+        </v-row> -->
+
+        <v-row class="mt-2" justify="center">
+            <v-col cols="8">
                 <v-row justify="center">
                     <v-col cols="12">
-                        <v-card elevation="1" shaped min-height="150" outlined>
+                        <v-card elevation="0" min-height="150" outlined>
+
+                            <v-card-text>
+
+                                <v-text-field class="elevation-0" hint="Presione enter para agregar" persistent-hint  @keydown.enter="matricula ? agregar() : null" v-model="matricula" label="No. de Matricula" @click:append="matricula ? agregar() : null"></v-text-field>
+
+                            </v-card-text>
 
                             <v-card-text v-if="matriculas.length == 0" align="center" class="text-center">
                                 <v-row justify="center" align="center">
-                                    <v-col cols="6">
-                                        <v-img width="100" src="@/assets/img/info.png"></v-img>
+                                    <v-col cols="4">
+                                        <v-img contain src="@/assets/img/info.png"></v-img>
                                     </v-col>
                                 </v-row>
-                                <h5 class="mt-2">Debe de ingresar al menos una matricula</h5>
+                                <h5 class="mt-4">Debe de ingresar al menos una matricula</h5>
                             </v-card-text>
 
                             <v-card-text class="overline" v-if="matriculas.length > 0">
@@ -29,7 +39,9 @@
                             </v-card-text>
                             <v-list-item v-for="(matricula, key) in matriculas" :key="key" dense>
                                 <v-list-item-content>
-                                    <v-list-item-title>{{ matricula }}</v-list-item-title>
+                                    <v-list-item-title>
+                                        <span class="text-h4">{{ matricula }}</span>
+                                    </v-list-item-title>
                                 </v-list-item-content>
                                 <v-list-item-action>
                                     <v-btn x-small @click="eliminar_matricula(key)" icon>
@@ -41,18 +53,16 @@
             
                     </v-col>
                 </v-row>
-           </v-col>
-            
-                        
+           </v-col> 
         </v-row>
 
         <v-divider class="mt-10"></v-divider>
         
         <v-row>
             <v-col>
-                <v-btn @click="registrar()" color="primary">CONTINUAR</v-btn>
+                <v-btn @click="pasos_registro.length >= step ? forward() : registrar()" :disabled="saving" :loading="saving" color="primary">CONTINUAR</v-btn>
 
-				<v-btn @click="back()" class="ml-2" text>ATRÁS</v-btn>
+				<v-btn :disabled="saving" @click="back()" class="ml-2" text>ATRÁS</v-btn>
             </v-col>
         </v-row>
     </div>
@@ -61,6 +71,8 @@
 <script>
 
     import Swal from 'sweetalert2'
+    
+    import { mapGetters } from 'vuex'
 
 	export default {
 		data(){
@@ -104,10 +116,30 @@
 
                 this.$store.commit('removeMatricula', key)
 
+            },
+            forward(){
+
+                if (this.matriculas.length > 0) {
+
+                    this.$store.commit('setStep', 4)
+
+                }else{
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: 'Debe de ingresar al menos una matricula!',
+                    })
+
+                }
             }
 
 		},
         computed: {
+            ...mapGetters({
+                saving: 'getSaving',
+                pasos_registro: 'getPasosRegistro'
+            }),
             datos_formulario(){
 
                 return this.$store.getters.getDatosFormulario

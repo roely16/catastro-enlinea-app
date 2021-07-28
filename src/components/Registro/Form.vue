@@ -5,7 +5,7 @@
             <!--It contains structure, form sign in-->
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6 col-md-offset-3">
+                    <div class="col-md-8 col-md-offset-2">
                         <div class="mt-4">
                             <v-stepper v-model="step">
                                 <v-stepper-header>
@@ -18,11 +18,10 @@
                                                 Tipo de Usuario
                                             </v-stepper-step>
                                         </v-col>
-
                                         <v-col v-for="(paso, key) in pasos_registro" :key="key">
                                             <v-stepper-step
                                                 :complete="step > paso.step"
-                                                :step="paso.step"
+                                                :step="key + 2"
                                                 :key="key"
                                             >
                                                 {{ paso.nombre }}
@@ -30,19 +29,15 @@
                                         </v-col>
                                     </v-row>
                                 </v-stepper-header>
-
                                 <v-stepper-items>
                                     <v-stepper-content step="1">
                                         <TipoUsuario></TipoUsuario>
                                     </v-stepper-content>
 
-                                    <v-stepper-content step="2">
-                                        <Datos></Datos>
+                                    <v-stepper-content v-for="(paso, key) in pasos_registro" :key="key" :step="key + 2">
+                                        <component v-bind:is="paso.componente"></component>
                                     </v-stepper-content>
 
-                                    <v-stepper-content step="3">
-                                        <Matriculas></Matriculas>
-                                    </v-stepper-content>
                                 </v-stepper-items>
                             </v-stepper>
                         </div>
@@ -55,15 +50,16 @@
 
 <script>
 
-    import TipoUsuario from '@/components/Registro/TipoUsuario'
-    import Datos from '@/components/Registro/Datos'
-    import Matriculas from '@/components/Registro/Matriculas'
+    // import TipoUsuario from '@/components/Registro/TipoUsuario'
+    // import Matriculas from '@/components/Registro/Matriculas'
+    // import Terminos from '@/components/Registro/Terminos'
 
     export default {
         components: {
-            Datos,
-            TipoUsuario,
-            Matriculas
+            'Datos': () => import('@/components/Registro/Datos'),
+            'TipoUsuario': () => import('@/components/Registro/TipoUsuario'),
+            'Matriculas': () => import('@/components/Registro/Matriculas'),
+            'Terminos': () => import('@/components/Registro/Terminos')
         },  
         data () {
             return {

@@ -7,24 +7,46 @@
                         <span class="overline">Datos del Usuario</span>
                     </v-col>
                     <v-col align="end">
-                        <v-chip label small color="primary">{{ data.tipo }}</v-chip>
-                        <v-btn @click="change_edit()" :color="!enable_edit ? 'primary' : 'success'" icon small class="ml-2">
-                            <v-icon>
-                                {{ !enable_edit ? 'mdi-pencil' : 'mdi-content-save' }}
-                            </v-icon>
-                        </v-btn>
+                        <!-- <v-chip label small color="info">{{ data.tipo }}</v-chip> -->
 
-                        <v-btn @click="cancel()" v-if="enable_edit" color="secondary" icon small class="ml-1">
-                            <v-icon>
-                                mdi-close-circle
-                            </v-icon>
+                        <v-badge :content="data.adjuntos" overlap color="error">
+                            <v-btn @click="() => {  
+
+                                obtener_adjuntos()
+
+                                const data = {
+                                    template: 'FormAdjuntos',
+                                    title: 'Documentos adjuntos',
+                                    width: '500'
+                                }
+
+                                mostrar_modal(data)
+
+                            }" icon>
+                                <v-icon>mdi-paperclip</v-icon>
+                            </v-btn>
+                        </v-badge>
+
+                        <v-btn @click="() => {  
+
+                            const data = {
+                                template: 'FormEmail',
+                                title: 'Enviar correo',
+                                width: '800'
+                            }
+
+                            mostrar_modal(data)
+
+                        }" class="ml-4" icon>
+                            <v-icon>mdi-email</v-icon>
                         </v-btn>
+                        
                     </v-col>
                 </v-row>
             </v-card-text>
             <v-card-text v-if="data" class="mt-0 pt-0">
 
-                <v-row class="mb-4 mt-1">
+                <v-row class="mb-1 mt-1">
                     <v-col cols="12">
                         <v-text-field :disabled="!enable_edit" v-model="data.nombres" autocomplete="off" hide-details outlined label="Nombres"></v-text-field>
                     </v-col>
@@ -64,9 +86,20 @@
                 </v-row>
 
                 <!-- Modificar la información del usuario -->
-                <v-row>
-                    <v-col>
-                        
+                <v-row class="mt-0 pt-0">
+                    <v-col cols="12">
+                        <v-btn @click="change_edit()" :color="!enable_edit ? 'primary' : 'success'" class="elevation-0">
+                            {{ !enable_edit ? 'Editar' : 'Guardar' }}
+                            <v-icon class="ml-2" size="20">
+                                {{ !enable_edit ? 'mdi-pencil' : 'mdi-content-save' }}
+                            </v-icon>
+                        </v-btn>
+
+                        <v-btn @click="cancel()" v-if="enable_edit" color="secondary" class="ml-1"> Cancelar
+                            <v-icon>
+                                mdi-close-circle
+                            </v-icon>
+                        </v-btn>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -83,30 +116,33 @@
                 </v-btn>
             </template>
         </v-snackbar>
+
+        <Modal :width="width" :title="title" :dark="false" ref="modal">
+            <template #form>
+                <component @closeModal="closeModal()" v-bind:is="content"></component>
+            </template>
+        </Modal>
     </div>
 </template>
 
 <script>
+
+    import Modal from '@/components/Modal'
+import { mapActions } from 'vuex'
+
     export default {
+        
+        components: {
+            Modal,
+            'FormAdjuntos': () => import('@/components/Admin/FormAdjuntos'),
+            'FormEmail': () => import('@/components/Admin/FormEmail')
+        },
         data(){
             return{
 
-                // datos: {
-				// 	nombres: null,
-				// 	apellidos: null,
-				// 	sexo: null,
-				// 	telefono: null,
-				// 	direccion: null,
-				// 	email: null,
-				// 	password: null,
-				// 	repite_password: null,
-				// 	dpi: null,
-				// 	representacion_legal: null,
-				// 	carne_abogado: null,
-				// 	carne_valuador: null,
-				// 	show_pass: false,
-				// 	show_repite_pass: false
-				// },
+                title: null,
+                width: null,
+                content: null,
                 sexo: [
                     {
                         text: 'Hombre',
@@ -119,8 +155,7 @@
                 ],
                 snackbar: false,
                 text: 'Example'
-                
-
+            
             }
         },
         methods: {
@@ -135,6 +170,22 @@
             cancel(){
 
                 this.$store.dispatch('cancel_change')
+
+            },
+            mostrar_modal(data){
+
+                this.$refs.modal.show()
+                this.content = data.template
+                this.title = data.title
+                this.width = data.width
+
+            },
+            ...mapActions([
+                'obtener_adjuntos'
+            ]),
+            closeModal(){
+
+                this.$refs.modal.close()
 
             }
 

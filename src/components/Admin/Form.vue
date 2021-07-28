@@ -19,13 +19,13 @@
 
             <v-row align="center" class="mt-10">
                 <v-col align="center">
-                    <v-btn @click="cambiar_estado_solicitud('A')" :disabled="allRejected" x-large color="success">
+                    <v-btn class="elevation-0" @click="cambiar_estado_solicitud('A')" :disabled="allRejected" x-large color="success">
                         ACEPTAR 
                         <v-icon>
                             mdi-check
                         </v-icon>
                     </v-btn>
-                    <v-btn @click="cambiar_estado_solicitud('R')" :disabled="allAcepted" class="ml-2" x-large color="error">
+                    <v-btn @click="cambiar_estado_solicitud('R')" :disabled="allAcepted" class="ml-2 elevation-0" x-large color="error">
                         RECHAZAR 
                         <v-icon>
                             mdi-close-circle
@@ -33,6 +33,42 @@
                     </v-btn>
                 </v-col>
             </v-row>
+
+            <Modal ref="modal" title="Confirmar" width="500" :dark="false" :toolbar="false">
+
+                <template #form>
+
+                    <v-container>
+                        <v-form ref="form" v-model="valid" @submit.prevent="procesar_solicitud()">
+                            <v-row class="text-center mt-2" justify="center">
+                                <v-col cols="3">
+                                    <v-img :src="require('@/assets/img/question.png')"></v-img>
+                                </v-col>
+                                <v-col cols="12">
+                                    <span class="text-h4">¿Está seguro?</span>
+                                </v-col>
+                                <v-col cols="12">
+                                    <span class="text-h5">Está a punto de <v-chip :color="estado == 'R' ? 'error' : 'success'" label>{{ estado == 'R' ? 'RECHAZAR' : 'ACEPTAR' }}</v-chip> la solicitud.</span>
+                                </v-col>
+                            </v-row>
+                            <v-row v-if="estado == 'R'" class="text-center" aling="center" justify="center">  
+                                <v-col cols="6">
+                                    <v-select v-model="motivo_rechazo" :rules="[v => !!v]" :items="motivos" item-text="nombre" item-value="id" label="Tipo de Rechazo" outlined></v-select>
+                                </v-col>
+                            </v-row>
+
+                            <v-divider></v-divider>
+
+                            <v-row class="text-center">
+                                <v-col>
+                                    <v-btn :disabled="loading" @click="closeModal()" large class="elevation-0">Cancelar</v-btn>
+                                    <v-btn :disabled="loading" :loading="loading" type="submit" large class="ml-2 elevation-0" color="primary">Confirmar</v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-form>
+                    </v-container>
+                </template>
+            </Modal>
         </v-container>
     </div>
 </template>
@@ -43,41 +79,70 @@
     import Matriculas from '@/components/Admin/Matriculas.vue'
     import Historial from '@/components/Admin/Historial.vue'
 
-    import Swal from 'sweetalert2'
+    //import Swal from 'sweetalert2'
+
+    import Modal from '@/components/Modal'
+import { mapActions } from 'vuex'
 
     export default {
+        data(){
+            return{
+                estado: null,
+                valid: true,
+                motivo_rechazo: null,
+                loading: false
+            }
+        },
         components: {
             DetalleUsuario,
             Matriculas,
-            Historial
+            Historial,
+            Modal
         },
         methods: {
-
+            ...mapActions([
+                'getMotivosRechazo'
+            ]),
+            closeModal(){
+                this.$refs.modal.close()
+            },
             cambiar_estado_solicitud(estado){
 
-                // Preguntar si está seguro
-                const text = estado == 'R' ? 'Esta apunto de RECHAZAR la solicitud!' : 'Esta apunto de ACEPTAR la solicitud!'
-                const btn = estado == 'R' ? 'SI, RECHAZAR!' : 'SI, ACEPTAR!'
+                this.estado = estado
+                this.getMotivosRechazo()
 
-                Swal.fire({
-                    title: '¿Está seguro?',
-                    text: text,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: btn,
-                    cancelButtonText: 'CANCELAR'
-                }).then((result) => {
+                this.$refs.modal.show()
 
-                    if (result.isConfirmed) {
-                        
-                        this.$store.dispatch('cambiar_estado_solicitud', estado)
+            },
+            procesar_solicitud(){
 
+                this.$refs.form.validate()
+
+                if (this.valid) {
+                    
+                    this.loading = true
+
+                    const data = {
+                        estado: this.estado,
+                        motivo_rechazo: this.motivo_rechazo
                     }
 
-                })
+                    this.$store.dispatch('cambiar_estado_solicitud', data)
+                    .then((result) => {
+                        
+                        console.log(result)
 
+                        if (result) {
+                            this.motivo_rechazo = null
+                            this.valid = true
+                            this.$refs.form.resetValidation()
+                            this.loading = false
+                            this.$refs.modal.close()    
+                        }
+
+                    })
+
+                }
             }
 
         },
@@ -129,6 +194,9 @@
 
                 return false
 
+            },
+            motivos(){
+                return this.$store.getters.getMotivos
             }
 
         }

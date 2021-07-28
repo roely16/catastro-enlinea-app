@@ -2,7 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import Registro from '../views/Registro'
-import Admin from '../views/Admin'
+import LoginAdmin from '../views/LoginAdmin'
+import Home from '../views/Home'
+import Solicitudes from '../views/Admin'
 
 Vue.use(VueRouter)
 
@@ -20,7 +22,19 @@ const routes = [
 	{
 		path: '/admin',
 		name: 'admin',
-		component: Admin
+		component: LoginAdmin
+	},
+	{
+		path: '/home',
+		name: 'home',
+		component: Home,
+		children: [
+			{
+				path: '/home/solicitudes_pendientes',
+				name: 'solicitudes_pendientes',
+				component: Solicitudes,
+			}
+		]
 	}
 ]
 

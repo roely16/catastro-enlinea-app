@@ -1,17 +1,5 @@
 <template>
     <div>
-        <v-row align="center">
-            <v-col cols="4">
-                <v-text-field v-model="search" outlined label="Buscar" append-icon="mdi-magnify"></v-text-field>
-            </v-col>
-            <v-col cols="6">
-
-            </v-col>
-            <v-col justify="end" cols="2">
-                <v-img src="@/assets/img/logo_muni.png"></v-img>
-            </v-col>
-        </v-row>
-
         <v-row>
             <v-col>
                 <v-data-table
@@ -19,24 +7,41 @@
                     :items="table_data.items"
                     :items-per-page="5"
                     class="elevation-0"
-                    :search="search"
+                    :search="busqueda"
                     hide-default-footer
                 >
                     <template v-slot:[`item.action`]="{ item }">
                         
-                        <v-btn icon color="success" @click="detalle(item)">
+                        <v-btn @click="asignar(item)" small v-if="usuario.jefe == '1'" icon color="info">
+                            <v-icon>
+                                mdi-account-arrow-left
+                            </v-icon>
+                        </v-btn>
+
+                        <v-btn small icon color="success" @click="detalle(item)">
                             <v-icon>
                                 mdi-eye
                             </v-icon>
                         </v-btn>
                     </template>
+
+                    <template v-slot:[`item.estado`]="{ item }">
+                        
+                        <v-chip small label :color="item.color">
+                           {{ item.estado }}
+                        </v-chip>
+                    </template>
                 </v-data-table>
             </v-col>
         </v-row>
 
-        <Modal ref="modal" :fullscreen="fullscreen" :title="title">
+        <Modal ref="modal" :dark="dark" :fullscreen="fullscreen" :title="title" :width="width">
             <template #form>
-                <Form></Form>
+
+                <Form v-if="form == 'form'"></Form>
+
+                <FormAsignaUsuario v-if="form == 'usuario'"></FormAsignaUsuario>
+
             </template>
         </Modal>
 
@@ -47,18 +52,22 @@
 
     import Modal from '@/components/Modal'
     import Form from '@/components/Admin/Form'
-
+    import FormAsignaUsuario from '@/components/Admin/FormAsignaUsuario'
+    
     export default {
         components: {
             Modal,
-            Form
+            Form,
+            FormAsignaUsuario
         },
         data(){
             return{
                 search: null,
                 title: null,
                 width: null,
-                fullscreen: false
+                fullscreen: false,
+                form: null,
+                dark: false
             }
         },
         methods: {
@@ -73,6 +82,22 @@
                 this.$store.commit('setIdSolicitud', item.id)
                 this.title = "Detalle de la Solicitud No. " + item.id
                 this.fullscreen = true
+                this.form = 'form'
+                this.dark = true
+                this.$refs.modal.show()
+
+            },
+            asignar(item){
+
+                const usuario = JSON.parse(localStorage.getItem('app-catastro-enlinea'))
+
+                this.$store.commit('setIdSolicitud', item.id)
+                this.title = "Asignar Responsable Solicitud " + item.id
+                this.fullscreen = false
+                this.form = 'usuario'
+                this.width = '500'
+                this.$store.dispatch('obtener_tecnicos', usuario.nit)
+                this.dark = false
                 this.$refs.modal.show()
 
             }
@@ -88,6 +113,14 @@
             table_data(){
 
                 return this.$store.getters.getSolicitudes
+            },
+            busqueda(){
+                return this.$store.getters.getSearch
+            },
+            usuario(){
+
+                return JSON.parse(localStorage.getItem('app-catastro-enlinea'))
+
             }
 
         }

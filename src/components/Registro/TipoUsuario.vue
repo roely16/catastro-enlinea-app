@@ -8,8 +8,8 @@
                     <v-card @click="seleccionar_tipo(tipo)" :elevation="hover ? 12 : 0" :color="!tipo.select ? 'grey lighten-1' : 'primary'" :dark="tipo.select" min-height="170" max-height="170">
                         <v-card-text class="text-center">
                             <v-row justify="center">
-                                <v-col cols="6">
-                                    <v-img width="75" :src="require('@/assets/img/' + tipo.image)"></v-img>
+                                <v-col cols="4">
+                                    <v-img contain :src="require('@/assets/img/' + tipo.image)"></v-img>
                                 </v-col>
                             </v-row>
                         </v-card-text>

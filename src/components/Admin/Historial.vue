@@ -7,7 +7,7 @@
                         <span class="overline">Historial</span>
                     </v-col>
                     <v-col align="end">
-                        <v-btn color="primary" icon small>
+                        <v-btn @click="mostrar_modal()" color="primary" icon small>
                             <v-icon>
                                 mdi-plus
                             </v-icon>
@@ -26,6 +26,7 @@
                     fixed-header
                     height="210"
                     class="historial"
+                    :items-per-page="9999"
                 >
                     <template v-slot:[`item.estado`]="{ item }">
 
@@ -34,6 +35,13 @@
                         </v-chip>
 
                     </template>
+
+                    <template v-slot:[`item.usuario`]="{ item }">
+
+                        {{ item.usuario_opera }}
+
+                    </template>
+
                 </v-data-table>
             </v-card-text>
 
@@ -56,11 +64,27 @@
             </v-card-text>
 
         </v-card>
+
+        <Modal ref="modal" width="400" title="Agregar a historial" :dark="false" >
+
+            <template #form>
+                <FormHistorial @closeModal="closeModal()"></FormHistorial>
+            </template>
+
+        </Modal>
     </div>
 </template>
 
 <script>
+
+    import Modal from '@/components/Modal'
+    import FormHistorial from '@/components/Admin/FormHistorial'
+
     export default {
+        components: {
+            Modal,
+            FormHistorial
+        },
         data(){
             return{
                 headers: [
@@ -81,6 +105,18 @@
                         align: 'right'
                     },
                 ]
+            }
+        },
+        methods: {
+            mostrar_modal(){
+
+                this.$refs.modal.show()
+
+            },
+            closeModal(){
+
+                this.$refs.modal.close()
+
             }
         },
         computed: {

@@ -6,15 +6,11 @@
             :fullscreen="fullscreen"
             persistent
         >
-      
             <v-card>
-                <v-toolbar
-                dark
-                color="teal darken-1"
-                >
+                <v-toolbar v-if="toolbar" :dark="dark" :color="color">
                     <v-btn
                         icon
-                        dark
+                        :dark="dark"
                         @click="dialog = false"
                     >
                         <v-icon>mdi-close</v-icon>
@@ -46,6 +42,18 @@
             fullscreen: {
                 type: Boolean,
                 default: false
+            },
+            color: {
+                type: String,
+                default: null
+            },
+            dark: {
+                type: Boolean,
+                default: true
+            },
+            toolbar: {
+                type: Boolean,
+                default: true
             }
         },
         data(){

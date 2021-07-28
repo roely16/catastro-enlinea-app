@@ -12,7 +12,11 @@ const state = {
     campos_especiales: [],
     datos_formulario: {},
     matriculas: [],
-    saved: false
+    saved: false,
+    nombres_adjuntos: [],
+    cantidad_adjuntos: null,
+    files: [],
+    saving: false
 }
 
 const mutations = {
@@ -27,11 +31,15 @@ const mutations = {
 
             this.dispatch('setCamposEspeciales')
 
+            this.dispatch('setAdjuntos')
+
         }
         
     },
     setStep(state, payload){
         state.step = payload
+
+        // state.step = 4
     },
     setPasosRegistro(state, payload){
 
@@ -63,6 +71,16 @@ const mutations = {
     clearPasosRegistro(state, payload){
         state.pasos_registro = payload
     },
+    setAdjuntos(state, payload){
+        state.nombres_adjuntos = payload.nombres_adjuntos
+        state.cantidad_adjuntos = payload.archivos_adjuntos
+    },
+    setFiles(state, payload){
+        state.files = payload
+    },
+    setSaving(state, payload){
+        state.saving = payload
+    }
     
 }
 
@@ -103,8 +121,26 @@ const actions = {
         
 
     },
+    setAdjuntos({state, commit}){
+
+        const data = {
+            url: 'obtener_adjuntos_registro',
+            data: {
+                tipo_usuario: state.tipo_usuario
+            }
+        }
+
+        request.post(data)
+        .then((response) => {
+            console.log(response.data)
+            commit('setAdjuntos', response.data)
+        })
+
+    },
     // eslint-disable-next-line no-unused-vars
-    createUser(state){
+    createUser({state, commit, dispatch}){
+
+        commit('setSaving', true)
 
         const data = {
             url: 'registrar_solicitud',
@@ -127,9 +163,19 @@ const actions = {
                 })
                 .then(() => {
 
-                    state.commit('setStep', 1)
-                    router.push('/')
+                    if (state.files.length > 0) {
+                        
+                        dispatch('uploadFile', response.data.data)
 
+                    }else{
+
+                        commit('setSaving', false)
+
+                    }
+
+                    commit('setStep', 1)
+                    router.push('/')
+                    
                 })
 
             }else{
@@ -138,6 +184,8 @@ const actions = {
                     title: response.data.title,
                     text: response.data.message,
                     icon: response.data.icon,
+                }).then(() => {
+                    commit('setSaving', false)
                 })
 
             }
@@ -152,6 +200,34 @@ const actions = {
         state.commit('setDatosFormulario', {})
         state.commit('setStep', 1)
         state.commit('setTipoUsuario', null)
+        state.commit('setFiles', [])
+
+    },
+    uploadFile({state, commit}, payload){
+
+        state.files.forEach(file => {
+            
+            let formData = new FormData();
+
+            formData.append('file', file)
+            formData.append('solicitud_id', payload.id)
+
+            const data = {
+                url: 'upload_file_registro',
+                data: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }            
+
+            request.post(data)
+            .then((response) => {
+                console.log(response.data)
+            })
+
+        });
+
+        commit('setSaving', false)
 
     }
 
@@ -164,7 +240,9 @@ const getters = {
     getPasosRegistro: state => state.pasos_registro,
     getCamposEspeciales: state => state.campos_especiales,
     getDatosFormulario: state => state.datos_formulario,
-    getMatriculas: state => state.matriculas
+    getMatriculas: state => state.matriculas,
+    getNombresAdjuntos: state => state.nombres_adjuntos,
+    getSaving: state => state.saving
 
 }
 
