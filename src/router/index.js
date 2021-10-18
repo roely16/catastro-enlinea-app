@@ -5,6 +5,9 @@ import Registro from '../views/Registro'
 import LoginAdmin from '../views/LoginAdmin'
 import Home from '../views/Home'
 import Solicitudes from '../views/Admin'
+import ProductosCatastrales from '../views/ProductosCatastrales'
+import CedulaCatastral from '../views/CedulaCatastral'
+import ValorUnitario from '../views/ValorUnitario'
 
 Vue.use(VueRouter)
 
@@ -33,6 +36,23 @@ const routes = [
 				path: '/home/solicitudes_pendientes',
 				name: 'solicitudes_pendientes',
 				component: Solicitudes,
+			}
+		]
+	},
+	{
+		path: '/productos_catastrales',
+		name: 'productos_catastrales',
+		component: ProductosCatastrales,
+		children: [
+			{
+				path: '/home/cedula_catastral',
+				name: 'cedula_catastral',
+				component: CedulaCatastral,
+			},
+			{
+				path: '/home/valor_unitario',
+				name: 'valor_unitario',
+				component: ValorUnitario,
 			}
 		]
 	}

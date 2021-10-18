@@ -7,13 +7,17 @@ Vue.use(Vuex)
 import registro from './registro/index'
 import admin from './admin/index'
 import login from './login/index'
+import login_client from './login_client/index'
+import perfil_contribuyente from './perfil_contribuyente/index'
 
 export default new Vuex.Store({
 
 	modules: {
 		registro: registro,
 		admin: admin,
-		login: login
+		login: login,
+		login_client: login_client,
+		perfil_contribuyente: perfil_contribuyente
 	},
 	
 })
