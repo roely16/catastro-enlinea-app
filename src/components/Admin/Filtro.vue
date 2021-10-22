@@ -35,13 +35,13 @@
                         getter: 'getRechazadas',
                         estado: 'R'
                     },
-                    // {
-                    //     icon: 'mdi-alarm',
-                    //     color: 'warning',
-                    //     label: 'Pendientes',
-                    //     getter: 'getRechazadas',
-                    //     estado: 'R'
-                    // }
+                    {
+                        icon: 'mdi-alarm',
+                        color: 'primary',
+                        label: 'En Proceso',
+                        getter: 'getEnProceso',
+                        estado: 'T'
+                    },
                 ]
             }
         },

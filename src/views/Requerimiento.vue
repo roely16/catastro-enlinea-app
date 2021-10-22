@@ -6,6 +6,7 @@
                     <Breadcrumb :items="items" />
                 </v-col>
             </v-row>
+
             <v-row>
                 <v-col cols="12" md="6" lg="6">
                     <v-row class="mt-4">
@@ -18,15 +19,27 @@
                             <v-select label="Seleccione una matrícula" v-model="matricula_select" :items="matriculas" item-text="matricula" item-value="matricula" hide-details outlined></v-select>
                         </v-col>
                     </v-row>
-                     <v-row justify="center">
+                    <v-row justify="center" dense>
+                        <v-col cols="6" md="6" lg="6">
+                            <v-radio-group v-model="trimestre">
+                                <v-radio
+                                    v-for="(t, key) in trimestres"
+                                    :key="key"
+                                    :label="t.text"
+                                    :value="t.value"
+                                ></v-radio>
+                            </v-radio-group>
+                        </v-col>
+                    </v-row>
+                    <v-row justify="center">
                         <v-col class="text-center" cols="6" md="6" lg="6">
-                            <v-btn @click="obtener_cedula" :disabled="!matricula_select" elevation="0" dark color="#10069f">
+                            <v-btn @click="obtener_requerimiento" :disabled="!matricula_select || !trimestre" elevation="0" dark color="#10069f">
                                 Generar
                             </v-btn>
                         </v-col>
                     </v-row>
                 </v-col>
-                <v-col cols="12" md="6" lg="6">
+                <v-col v-if="!emptyMessage" cols="12" md="6" lg="6">
                     <v-row justify="center">
                         <v-col cols="12">
                             <embed :src="pdf_url" width="100%" height="550" 
@@ -35,8 +48,13 @@
                         </v-col>
                     </v-row>
                 </v-col>
+                <v-col align-self="center" v-if="emptyMessage">
+                    <v-alert icon="mdi-alert-octagon" text border="left" color="red">
+                        {{ emptyMessage }}
+                    </v-alert>
+                </v-col>
             </v-row>
-            
+
         </v-container>
     </div>
 </template>
@@ -49,6 +67,10 @@
     import Breadcrumb from '@/components/HomeClient/Breadcrumb'
 
     export default {
+        components: {
+            PDFPreview,
+            Breadcrumb
+        },
         data(){
             return{
                 items: [
@@ -58,30 +80,30 @@
                         to: '#/productos_catastrales',
                     },
                     {
-                        text: 'Cédula Catastral',
+                        text: 'Requerimiento de Pago',
                         disabled: true,
                         to: null,
                     },
                 ],
             }
         },
-        components: {
-            PDFPreview,
-            Breadcrumb
-        },
         methods: {
             ...mapActions('perfil_contribuyente', [
                 'obtener_matriculas',
-                'obtener_cedula'
+                'obtener_requerimiento',
+                'obtener_trimestres'
             ]),
             ...mapMutations('perfil_contribuyente', [
-                'setMatricula'
+                'setMatricula',
+                'setTrimestre'
             ])
         },
         computed: {
             ...mapState('perfil_contribuyente', {
                 matriculas: state => state.matriculas,
-                pdf_url: state => state.pdf_url
+                pdf_url: state => state.pdf_url,
+                trimestres: state => state.trimestres,
+                emptyMessage: state => state.emptyMessage
             }),
             matricula_select: {
                 get(){
@@ -91,12 +113,21 @@
                     this.setMatricula(val)
                 }
             },
+            trimestre: {
+                get(){
+                    return this.$store.state.perfil_contribuyente.trimestre
+                },
+                set(val){
+                    this.setTrimestre(val)
+                }
+            },
             api_cedula(){
                 return process.env.VUE_APP_CEDULA_URL
             }
         },
         mounted(){
             this.obtener_matriculas()
+            this.obtener_trimestres()
         }
     }
 </script>

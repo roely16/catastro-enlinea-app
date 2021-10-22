@@ -17,9 +17,12 @@ const state = {
     adjuntos_solicitud: [],
     aceptadas: null,
     rechazadas: null,
+    enproceso: null,
     estado: null,
     tecnicos: [],
-    motivos_rechazo: []
+    motivos_rechazo: [],
+    uploading: false,
+    files: []
 }
 
 const mutations = {
@@ -68,16 +71,20 @@ const mutations = {
     setRechazadas(state, payload){
         state.rechazadas = payload
     },
+    setEnProceso(state, payload){
+        state.enproceso = payload
+    },  
     setEstado(state, payload){
-
         state.estado = payload
-
     },
     setTecnicos(state, payload){
         state.tecnicos = payload
     },
     setMotivosRechazo(state, payload){
         state.motivos_rechazo = payload
+    },
+    setUploading(state, payload){
+        state.uploading = payload
     }
 
 }
@@ -102,6 +109,7 @@ const actions = {
             this.commit('setSolicitudes', response.data)
             commit('setAceptadas', response.data.aceptadas)
             commit('setRechazadas', response.data.rechazadas)
+            commit('setEnProceso', response.data.enproceso)
 
         })
 
@@ -331,6 +339,37 @@ const actions = {
         .then((response) => {
             commit('setMotivosRechazo', response.data)
         })
+    },
+    subirArchivos({commit, state, dispatch}, payload){
+
+        commit('setUploading', true)
+
+        payload.forEach(file => {
+            
+            let formData = new FormData();
+
+            formData.append('file', file)
+            formData.append('solicitud_id', state.id_solicitud)
+
+            const data = {
+                url: 'upload_file_registro',
+                data: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }            
+
+            request.post(data)
+            .then((response) => {
+                if(response.data.status == 200){
+                    dispatch('obtener_adjuntos')
+                }
+            })
+
+        });
+
+        commit('setUploading', false)
+
     }
 
 }
@@ -347,6 +386,7 @@ const getters = {
     getAdjuntos: state => state.adjuntos_solicitud,
     getAceptadas: state => state.aceptadas,
     getRechazadas: state => state.rechazadas,
+    getEnProceso: state => state.enproceso,
     getEstado: state => state.estado,
     getTecnicos: state => state.tecnicos,
     getMotivos: state => state.motivos_rechazo

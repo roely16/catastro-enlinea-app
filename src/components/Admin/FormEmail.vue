@@ -2,9 +2,13 @@
     <div>
         <v-container>
             <v-form @submit.prevent="enviar()" v-model="valid" ref="form">
-                <v-row class="mt-2">
-                    <v-col cols="12" md="6">
-                        <v-text-field v-model="email.asunto" :rules="[v => !!v]" autocomplete="off" hide-details outlined label="Asunto"></v-text-field>
+                <v-row align="center" justify="center" class="mt-2">
+                    <v-col cols="12" md="12" lg="12">
+                       
+                        <span class="text-h6">
+                            Asunto: Solicitud de Creación de Usuario No. {{ id_solicitud }}
+                        </span>
+                       
                     </v-col>
 
                     <v-col cols="12">
@@ -33,7 +37,7 @@
 
 <script>
     
-    import { mapActions } from 'vuex'
+    import { mapActions, mapState } from 'vuex'
     import MailEditor from '@/components/Admin/MailEditor'
 
     export default {
@@ -44,9 +48,10 @@
             return{
                 valid: true,
                 email: {
-                    asunto: null,
+                    asunto: "Solicitud de Creación de Usuario No. " + this.$store.state.admin.id_solicitud,
                     mensaje: null
-                }
+                },
+                editAsunto: false
             }
         },
         methods: {
@@ -78,6 +83,11 @@
                 this.$emit('closeModal')
 
             }
+        },
+        computed: {
+            ...mapState({
+                id_solicitud: state => state.admin.id_solicitud
+            })
         }
     }
 </script>

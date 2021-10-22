@@ -8,6 +8,7 @@ import Solicitudes from '../views/Admin'
 import ProductosCatastrales from '../views/ProductosCatastrales'
 import CedulaCatastral from '../views/CedulaCatastral'
 import ValorUnitario from '../views/ValorUnitario'
+import Requerimiento from '../views/Requerimiento'
 
 Vue.use(VueRouter)
 
@@ -45,12 +46,17 @@ const routes = [
 		component: ProductosCatastrales,
 		children: [
 			{
-				path: '/home/cedula_catastral',
+				path: '/productos_catastrales/cedula_catastral',
 				name: 'cedula_catastral',
 				component: CedulaCatastral,
 			},
 			{
-				path: '/home/valor_unitario',
+				path: '/productos_catastrales/requerimiento_pago',
+				name: 'requerimiento_pago',
+				component: Requerimiento,
+			},
+			{
+				path: '/productos_catastrales/valor_unitario',
 				name: 'valor_unitario',
 				component: ValorUnitario,
 			}
