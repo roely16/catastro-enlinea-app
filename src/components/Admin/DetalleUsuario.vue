@@ -43,6 +43,14 @@
                         
                     </v-col>
                 </v-row>
+
+                <v-row dense>
+                    <v-col>
+                        <v-chip color="success" label>
+                            {{ data.tipo }}
+                        </v-chip>
+                    </v-col>
+                </v-row>
             </v-card-text>
             <v-card-text v-if="data" class="mt-0 pt-0">
 
