@@ -1,10 +1,9 @@
 <template>
     <div>
         <v-app-bar color="#fff" elevation="1" height="120">
-            <v-app-bar-nav-icon>
-                <v-img class="ml-10" width="100" contain :src="require('@/assets/img/logo_muni.jpg')"></v-img>
-
-            </v-app-bar-nav-icon>
+            <v-toolbar-title>
+                <v-img width="100" contain :src="require('@/assets/img/logo_muni.jpg')"></v-img>
+            </v-toolbar-title>
 
             <v-spacer></v-spacer>
 

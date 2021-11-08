@@ -1,8 +1,6 @@
 <template>
     <div>
-       
-    
-      <v-navigation-drawer dark floating permanent app class="elevation-4">
+      <v-navigation-drawer dark floating app class="elevation-4">
 
         <template v-slot:prepend>
 			<Profile></Profile>

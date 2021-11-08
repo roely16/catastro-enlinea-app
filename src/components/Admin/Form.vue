@@ -1,7 +1,45 @@
 <template>
     <div>
         <v-container>
-            <v-row justify="center" align="center">
+            <v-row>
+                <v-col>
+                    <v-alert
+                        icon="mdi-shield-lock-outline"
+                        prominent
+                        text
+                        type="info"
+                        v-if="solicitud.tipo_solicitud_id == 1"
+                    >
+                        <v-row>
+                            <v-col>
+                                <div class="text-h6">
+                                    Solicitud para Habilitación de Usuario
+                                </div>
+                                Para procesar la solicitud es necesario que acepte o bien rechace las <span class="font-weight-bold">matriculas</span> y <span class="font-weight-bold">roles</span> requeridos.  Luego dar clic en <v-chip color="success" label small>ACEPTAR</v-chip> o <v-chip label small color="error">RECHAZAR</v-chip>
+                            </v-col>
+                            <v-col align-self="center">
+                                <v-row align="center">
+                                    <v-col align="center">
+                                        <v-btn class="elevation-0" @click="cambiar_estado_solicitud('A')" x-large color="success">
+                                            ACEPTAR 
+                                            <v-icon>
+                                                mdi-check
+                                            </v-icon>
+                                        </v-btn>
+                                        <v-btn @click="cambiar_estado_solicitud('R')" class="ml-2 elevation-0" x-large color="error">
+                                            RECHAZAR 
+                                            <v-icon>
+                                                mdi-close-circle
+                                            </v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                </v-row>
+                            </v-col>
+                        </v-row>
+                    </v-alert>
+                </v-col>
+            </v-row>
+            <v-row justify="center">
                 <v-col cols="6">
                     <DetalleUsuario></DetalleUsuario>
                 </v-col>
@@ -11,26 +49,13 @@
                             <Matriculas></Matriculas>
                         </v-col>
                         <v-col cols="12">
+                            <Roles></Roles>
+                        </v-col>
+                        <v-col cols="12">
                             <Historial></Historial>
                         </v-col>
+                        
                     </v-row>
-                </v-col>
-            </v-row>
-
-            <v-row align="center" class="mt-10">
-                <v-col align="center">
-                    <v-btn class="elevation-0" @click="cambiar_estado_solicitud('A')" :disabled="allRejected" x-large color="success">
-                        ACEPTAR 
-                        <v-icon>
-                            mdi-check
-                        </v-icon>
-                    </v-btn>
-                    <v-btn @click="cambiar_estado_solicitud('R')" :disabled="allAcepted" class="ml-2 elevation-0" x-large color="error">
-                        RECHAZAR 
-                        <v-icon>
-                            mdi-close-circle
-                        </v-icon>
-                    </v-btn>
                 </v-col>
             </v-row>
 
@@ -78,11 +103,12 @@
     import DetalleUsuario from '@/components/Admin/DetalleUsuario.vue'
     import Matriculas from '@/components/Admin/Matriculas.vue'
     import Historial from '@/components/Admin/Historial.vue'
+    import Roles from '@/components/Admin/Roles.vue'
 
     //import Swal from 'sweetalert2'
 
     import Modal from '@/components/Modal'
-import { mapActions } from 'vuex'
+    import { mapActions, mapState } from 'vuex'
 
     export default {
         data(){
@@ -97,7 +123,8 @@ import { mapActions } from 'vuex'
             DetalleUsuario,
             Matriculas,
             Historial,
-            Modal
+            Modal,
+            Roles
         },
         methods: {
             ...mapActions([
@@ -197,7 +224,10 @@ import { mapActions } from 'vuex'
             },
             motivos(){
                 return this.$store.getters.getMotivos
-            }
+            },
+            ...mapState({
+                solicitud: state => state.admin.detalle_solicitud.solicitud
+            })
 
         }
     }

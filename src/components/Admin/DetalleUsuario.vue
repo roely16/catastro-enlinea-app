@@ -1,15 +1,13 @@
 <template>
     <div>
-        <v-card min-height="625">
+        <v-card color="blue-grey lighten-5" outlined min-height="850">
             <v-card-text v-if="data">
                 <v-row align="center">
                     <v-col cols="5">
                         <span class="overline">Datos del Usuario</span>
                     </v-col>
                     <v-col align="end">
-                        <!-- <v-chip label small color="info">{{ data.tipo }}</v-chip> -->
-
-                        <v-badge :content="data.adjuntos" overlap color="error">
+                        <v-badge :content="data.adjuntos" overlap :color="data.adjuntos > 0 ? 'error' : null">
                             <v-btn @click="() => {  
 
                                 obtener_adjuntos()
@@ -44,13 +42,6 @@
                     </v-col>
                 </v-row>
 
-                <v-row dense>
-                    <v-col>
-                        <v-chip color="success" label>
-                            {{ data.tipo }}
-                        </v-chip>
-                    </v-col>
-                </v-row>
             </v-card-text>
             <v-card-text v-if="data" class="mt-0 pt-0">
 
@@ -77,20 +68,16 @@
                         <v-text-field v-model="data.dpi" :disabled="!enable_edit" autocomplete="off" hide-details outlined label="DPI"></v-text-field>
                     </v-col>
 
-                    <!-- Requisitos especificos -->
-                    <v-col cols="12" v-for="(campo, key) in campos_especiales" :key="key">
-                        <v-row dense>
-                            <v-col v-if="campo.campo == 'representacion_legal'" cols="12">
-                                <v-text-field v-model="data.representacion_legal" :disabled="!enable_edit" autocomplete="off" hide-details outlined label="Representación Legal"></v-text-field>
-                            </v-col>
-                            <v-col v-if="campo.campo == 'carne_abogado'" cols="12">
-                                <v-text-field v-model="data.carne_abogado" :disabled="!enable_edit" autocomplete="off" hide-details outlined label="Carné de Abogado"></v-text-field>
-                            </v-col>
-                            <v-col v-if="campo.campo == 'carne_valuador'" cols="12">
-                                <v-text-field v-model="data.carne_valuador" :disabled="!enable_edit" autocomplete="off" hide-details outlined label="Carné de Valuador"></v-text-field>
-                            </v-col>
-                        </v-row>
+                     <v-col cols="12">
+                        <v-text-field v-model="data.representacion_legal" :disabled="!enable_edit" autocomplete="off" hide-details outlined label="Representación Legal"></v-text-field>
                     </v-col>
+                    <v-col cols="12">
+                        <v-text-field v-model="data.carne_abogado" :disabled="!enable_edit" autocomplete="off" hide-details outlined label="Carné de Abogado"></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field v-model="data.carne_valuador" :disabled="!enable_edit" autocomplete="off" hide-details outlined label="Carné de Valuador"></v-text-field>
+                    </v-col>
+
                 </v-row>
 
                 <!-- Modificar la información del usuario -->
@@ -136,7 +123,7 @@
 <script>
 
     import Modal from '@/components/Modal'
-import { mapActions } from 'vuex'
+    import { mapActions } from 'vuex'
 
     export default {
         

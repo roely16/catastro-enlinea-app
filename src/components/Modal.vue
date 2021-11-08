@@ -18,17 +18,12 @@
                     <v-toolbar-title>{{ title }}</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-toolbar-items>
-                        
                         <slot name="modal-corner-right">
-
                         </slot>
                     </v-toolbar-items>
                 </v-toolbar>
-
                 <slot name="form">
-
                 </slot>
-                
             </v-card>
         </v-dialog>
     </div>

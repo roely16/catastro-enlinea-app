@@ -10,7 +10,8 @@ const state = {
     pdf_url: null,
     trimestres: null,
     trimestre: null,
-    emptyMessage: null
+    emptyMessage: null,
+    loading: false
 }
 
 const mutations = {
@@ -31,6 +32,9 @@ const mutations = {
     },
     setEmptyMessage(state, payload){
         state.emptyMessage = payload
+    },
+    setLoading(state, payload){
+        state.loading = payload
     }
 }
 
@@ -53,19 +57,25 @@ const actions = {
     },
     obtener_cedula({commit, state}){
         
-        const url = process.env.VUE_APP_CEDULA_URL + state.matricula_select 
+        commit('setLoading', true)
+
+        const user = JSON.parse(localStorage.getItem('catastro_user'))
+
+        const url = process.env.VUE_APP_CEDULA_URL + '?matricula=' + state.matricula_select + '&user=' + user.id 
 
         axios.get(url, { responseType: "blob" })
         .then((response) => {
             const blob = new Blob([response.data], {type: 'application/pdf'});
             const objectUrl = URL.createObjectURL(blob);
-            console.log(objectUrl)
             commit('setPDFURL', objectUrl)
+
+            commit('setLoading', false)
         })
     },
     obtener_requerimiento({state, commit}){
 
         commit('setEmptyMessage', null)
+        commit('setLoading', true)
             
         const data = {
             url: 'matricula_interlocutor',
@@ -102,6 +112,8 @@ const actions = {
                         commit('setPDFURL', objectUrl)
 
                     }
+
+                    commit('setLoading', false)
                     
                 })
 

@@ -9,6 +9,11 @@ import ProductosCatastrales from '../views/ProductosCatastrales'
 import CedulaCatastral from '../views/CedulaCatastral'
 import ValorUnitario from '../views/ValorUnitario'
 import Requerimiento from '../views/Requerimiento'
+import ValidarDocumento from '../views/ValidarDocumento'
+import Configuracion from '../views/Configuracion'
+import Perfil from '@/components/Config/Perfil'
+import Matriculas from '@/components/Config/Matriculas'
+import Roles from '@/components/Config/Roles'
 
 Vue.use(VueRouter)
 
@@ -22,6 +27,11 @@ const routes = [
 		path: '/registro',
 		name: 'registro',
 		component: Registro
+	},
+	{
+		path: '/validar_documento',
+		name: 'validar_documento',
+		component: ValidarDocumento
 	},
 	{
 		path: '/admin',
@@ -59,6 +69,28 @@ const routes = [
 				path: '/productos_catastrales/valor_unitario',
 				name: 'valor_unitario',
 				component: ValorUnitario,
+			},
+			{
+				path: '/productos_catastrales/configuracion',
+				name: 'configuracion',
+				component: Configuracion,
+				children: [
+					{
+						path: '/productos_catastrales/configuracion/mi_perfil',
+						name: 'mi_perfil',
+						component: Perfil,
+					},
+					{
+						path: '/productos_catastrales/configuracion/matriculas',
+						name: 'matriculas',
+						component: Matriculas,
+					},
+					{
+						path: '/productos_catastrales/configuracion/roles',
+						name: 'roles',
+						component: Roles,
+					}
+				]
 			}
 		]
 	}

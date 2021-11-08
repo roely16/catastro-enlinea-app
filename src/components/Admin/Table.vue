@@ -5,10 +5,12 @@
                 <v-data-table
                     :headers="table_data.headers"
                     :items="table_data.items"
-                    :items-per-page="5"
+                    :items-per-page="10"
                     class="elevation-0"
                     :search="busqueda"
                     hide-default-footer
+                    @page-count="pageCount = $event"
+                    :page.sync="page"
                 >
                     <template v-slot:[`item.action`]="{ item }">
                         
@@ -26,12 +28,27 @@
                     </template>
 
                     <template v-slot:[`item.estado`]="{ item }">
-                        
                         <v-chip small label :color="item.color">
                            {{ item.estado }}
                         </v-chip>
                     </template>
+
+                    <template v-slot:[`item.tipo_solicitud`]="{ item }">
+                        <v-chip dark small label :color="item.color_tipo">
+                           {{ item.tipo_solicitud }}
+                        </v-chip>
+                    </template>
+
                 </v-data-table>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col>
+                <v-pagination
+                    v-model="page"
+                    :length="pageCount"
+                ></v-pagination>
             </v-col>
         </v-row>
 
@@ -67,7 +84,9 @@
                 width: null,
                 fullscreen: false,
                 form: null,
-                dark: false
+                dark: false,
+                page: 1,
+                pageCount: null
             }
         },
         methods: {

@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-row class="mt-4">
-            <v-col cols="12" lg="4" v-for="(option, key) in options" :key="key">
+            <v-col cols="12" sm="6" md="6" lg="4" xl="3" v-for="(option, key) in options" :key="key">
                 <Option :item="option" />
             </v-col>
         </v-row>

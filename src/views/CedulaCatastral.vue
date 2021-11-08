@@ -27,13 +27,25 @@
                     </v-row>
                 </v-col>
                 <v-col cols="12" md="6" lg="6">
-                    <v-row justify="center">
+                    <v-row v-if="pdf_url && !loading" justify="center">
                         <v-col cols="12">
                             <embed :src="pdf_url" width="100%" height="550" 
                             type="application/pdf">
                             <PDFPreview />
                         </v-col>
                     </v-row>
+
+                    <v-row v-if="loading">
+                        <v-col cols="12">
+                            <lottie-animation
+                                ref="anim"
+                                :animationData="require('@/assets/animations/loading.json')"
+                                :loop="true"
+                                :autoPlay="true"
+                            />
+                        </v-col>
+                    </v-row>
+
                 </v-col>
             </v-row>
             
@@ -47,6 +59,8 @@
 
     import PDFPreview from '@/components/HomeClient/PDFPreview'
     import Breadcrumb from '@/components/HomeClient/Breadcrumb'
+
+    import LottieAnimation from 'lottie-web-vue'
 
     export default {
         data(){
@@ -67,7 +81,8 @@
         },
         components: {
             PDFPreview,
-            Breadcrumb
+            Breadcrumb,
+            LottieAnimation
         },
         methods: {
             ...mapActions('perfil_contribuyente', [
@@ -81,7 +96,8 @@
         computed: {
             ...mapState('perfil_contribuyente', {
                 matriculas: state => state.matriculas,
-                pdf_url: state => state.pdf_url
+                pdf_url: state => state.pdf_url,
+                loading: state => state.loading
             }),
             matricula_select: {
                 get(){

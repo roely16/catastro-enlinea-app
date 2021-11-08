@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card min-height="300">
+        <v-card color="blue-grey lighten-5" outlined min-height="200">
             <v-card-text>
                 <span class="overline">Matriculas</span>
             </v-card-text>
@@ -74,6 +74,11 @@
                         sortable: false
                     },
                     {
+                        text: 'No. de Solicitud',
+                        value: 'solicitud_id',
+                        sortable: false
+                    },
+                    {
                         text: 'Estado',
                         value: 'estado',
                         sortable: false
@@ -109,7 +114,7 @@
                 return data.matriculas
 
             }
-        }
+        },
     }
 </script>
 

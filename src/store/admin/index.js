@@ -7,7 +7,8 @@ const state = {
     headers_solicitudes: [],
     detalle_solicitud: {
         matriculas: [],
-        historial: []
+        historial: [],
+        roles: []
     },
     enable_edit: false,
     bk_detalle_solicitud: null,
@@ -131,7 +132,7 @@ const actions = {
         })
 
     },
-    cambiar_estado_matricula(state, payload){
+    cambiar_estado_matricula({dispatch}, payload){
 
         const usuario = JSON.parse(localStorage.getItem('app-catastro-enlinea'))
         
@@ -145,7 +146,8 @@ const actions = {
         request.post(data)
         .then(() => {
 
-            this.dispatch('detalleSolicitud')
+            dispatch('detalleSolicitud')
+            dispatch('getSolicitudes')
 
         })
 
@@ -370,6 +372,26 @@ const actions = {
 
         commit('setUploading', false)
 
+    },
+    async cambiar_estado_rol({dispatch}, payload){
+
+        const usuario = JSON.parse(localStorage.getItem('app-catastro-enlinea'))
+
+        const data = {
+            url: 'cambiar_estado_rol',
+            data: {
+                estado: payload.estado,
+                solicitud_id: payload.item.solicitud_id,
+                usuario_id: payload.item.usuario_id,
+                usuario_atiende: usuario.nit
+            }
+        }
+
+        request.post(data)
+        .then(() => {
+            dispatch('detalleSolicitud')
+            dispatch('getSolicitudes')
+        })
     }
 
 }
@@ -389,7 +411,7 @@ const getters = {
     getEnProceso: state => state.enproceso,
     getEstado: state => state.estado,
     getTecnicos: state => state.tecnicos,
-    getMotivos: state => state.motivos_rechazo
+    getMotivos: state => state.motivos_rechazo,
 }
 
 export default {

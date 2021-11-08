@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card min-height="300" max-height="300">
+        <v-card outlined color="blue-grey lighten-5" min-height="300" max-height="300">
             <v-card-text>
                 <v-row>
                     <v-col>

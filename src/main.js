@@ -7,7 +7,11 @@ import vuetify from './plugins/vuetify'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+
+import LottieAnimation from 'lottie-web-vue'
+
 Vue.use(VueAxios, axios)
+Vue.use(LottieAnimation)
 
 Vue.config.productionTip = false
 

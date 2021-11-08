@@ -1,17 +1,17 @@
 <template>
     <div>
         <v-navigation-drawer
+            v-model="drawer"
             floating
-            permanent
             app
             class="elevation-4"
         >   
-            <template v-slot:prepend>
+            <!-- <template v-slot:prepend>
                 <Profile></Profile>
             </template>
 
             <v-divider></v-divider>
-
+ -->
             <v-list
                 dense
                 rounded
@@ -47,13 +47,13 @@
 
 <script>
 
-    import Profile from '@/components/HomeClient/Profile'
+    // import Profile from '@/components/HomeClient/Profile'
 
     import { mapActions } from 'vuex'
 
     export default {
         components: {
-            Profile
+            
         },
         data(){
             return{
@@ -63,12 +63,8 @@
                         icon: 'mdi-view-dashboard',
                         to: 'cedula_catastral' 
                     },
-                    // { 
-                    //     title: 'Valor Unitario', 
-                    //     icon: 'mdi-forum',
-                    //     to: 'valor_unitario' 
-                    // },
-                ]
+                ],
+                drawer: false
             }
         },
         methods: {

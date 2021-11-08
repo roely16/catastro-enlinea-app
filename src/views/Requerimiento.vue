@@ -39,7 +39,7 @@
                         </v-col>
                     </v-row>
                 </v-col>
-                <v-col v-if="!emptyMessage" cols="12" md="6" lg="6">
+                <v-col v-if="!emptyMessage && !loading" cols="12" md="6" lg="6">
                     <v-row justify="center">
                         <v-col cols="12">
                             <embed :src="pdf_url" width="100%" height="550" 
@@ -48,11 +48,23 @@
                         </v-col>
                     </v-row>
                 </v-col>
-                <v-col align-self="center" v-if="emptyMessage">
+                <v-col align-self="center" v-if="emptyMessage && !loading">
                     <v-alert icon="mdi-alert-octagon" text border="left" color="red">
                         {{ emptyMessage }}
                     </v-alert>
                 </v-col>
+
+                <v-row v-if="loading">
+                    <v-col cols="12">
+                        <lottie-animation
+                            ref="anim"
+                            :animationData="require('@/assets/animations/loading.json')"
+                            :loop="true"
+                            :autoPlay="true"
+                        />
+                    </v-col>
+                </v-row>
+
             </v-row>
 
         </v-container>
@@ -66,10 +78,13 @@
     import PDFPreview from '@/components/HomeClient/PDFPreview'
     import Breadcrumb from '@/components/HomeClient/Breadcrumb'
 
+    import LottieAnimation from 'lottie-web-vue'
+
     export default {
         components: {
             PDFPreview,
-            Breadcrumb
+            Breadcrumb,
+            LottieAnimation
         },
         data(){
             return{
@@ -103,7 +118,8 @@
                 matriculas: state => state.matriculas,
                 pdf_url: state => state.pdf_url,
                 trimestres: state => state.trimestres,
-                emptyMessage: state => state.emptyMessage
+                emptyMessage: state => state.emptyMessage,
+                loading: state => state.loading
             }),
             matricula_select: {
                 get(){
