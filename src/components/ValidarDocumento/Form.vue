@@ -48,13 +48,14 @@
                                             {{ message }}
                                         </v-alert>
                                     </v-col>
-                                    <v-col v-if="pdf_url">
+                                    <v-col class="wrapper" v-if="pdf_url">
                                         <embed 
                                             :src="pdf_url" 
                                             width="100%" 
                                             height="550" 
                                             type="application/pdf"
                                         >
+                                        <div class="embed-cover"></div>
                                     </v-col>
                                 </v-row>
 
@@ -114,7 +115,7 @@
                 loading: state => state.loading,
                 message: state => state.message,
                 type: state => state.type,
-                pdf_url: state => state.url
+                pdf_url: state => state.url + '#toolbar=0&navpanes=0&scrollbar=0'
             }),
         },
         mounted(){
@@ -127,5 +128,21 @@
 </script>
 
 <style>
+    .embed-cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 30px;
+        
+        /* Just for demonstration, remove this part */
+        /* opacity: 0.25;
+        background-color: red; */
+    }
+
+    .wrapper {
+        position: relative;
+        overflow: hidden;
+    }
 
 </style>
