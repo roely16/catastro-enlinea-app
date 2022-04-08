@@ -67,6 +67,14 @@ const actions = {
         .then((response) => {
             const blob = new Blob([response.data], {type: 'application/pdf'});
             const objectUrl = URL.createObjectURL(blob);
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'cedula_catastral.pdf'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+
             commit('setPDFURL', objectUrl)
 
             commit('setLoading', false)
@@ -89,7 +97,7 @@ const actions = {
 
             if (response.data.status == 200) {
                 
-                const url= 'http://udicat.muniguate.com/apis/api_requerimiento/'
+                const url= 'https://udicat.muniguate.com/apis/api_requerimiento/'
                 const data_r = {
                     name: 'generar_requerimiento',
                     param: {
@@ -111,6 +119,13 @@ const actions = {
                         const objectUrl = URL.createObjectURL(blob);
                         commit('setPDFURL', objectUrl)
 
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', 'requerimiento_pago.pdf'); //or any other extension
+                        document.body.appendChild(link);
+                        link.click();
+
                     }
 
                     commit('setLoading', false)
@@ -123,7 +138,7 @@ const actions = {
     },
     obtener_trimestres({commit}){
 
-        const url= 'http://udicat.muniguate.com/apis/api_requerimiento/'
+        const url= 'https://udicat.muniguate.com/apis/api_requerimiento/'
         const data = {
             name: 'obtener_trimestres',
             param: {

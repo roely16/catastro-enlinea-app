@@ -48,7 +48,7 @@ const actions = {
         .then((response) => {
 
             if (response.data.status == 200) {
-                commit('set_url', 'http://' + response.data.file_path)
+                commit('set_url', 'https://' + response.data.file_path)
             }else{
                 commit('set_url', null)
             }

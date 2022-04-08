@@ -4,11 +4,11 @@
             <v-col cols="12">
                 <v-carousel height="300">
                     <v-carousel-item
-                    v-for="(item,i) in items"
-                    :key="i"
-                    :src="item.src"
-                    reverse-transition="fade-transition"
-                    transition="fade-transition"
+                        v-for="(item,i) in items"
+                        :key="i"
+                        :src="item.src"
+                        reverse-transition="fade-transition"
+                        transition="fade-transition"
                     ></v-carousel-item>
                 </v-carousel>
             </v-col>
@@ -22,7 +22,7 @@
             return{
                 items: [
                     {
-                        src: 'http://www.muniguate.com/wp-content/themes/munigt/img/hero-n-6.jpeg',
+                        src: 'https://udicat.muniguate.com/apps/catastro-enlinea-app/hero-n-6.jpeg',
                     },
                     
                 ],

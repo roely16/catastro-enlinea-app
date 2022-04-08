@@ -6,12 +6,6 @@
             app
             class="elevation-4"
         >   
-            <!-- <template v-slot:prepend>
-                <Profile></Profile>
-            </template>
-
-            <v-divider></v-divider>
- -->
             <v-list
                 dense
                 rounded
@@ -46,8 +40,6 @@
 </template>
 
 <script>
-
-    // import Profile from '@/components/HomeClient/Profile'
 
     import { mapActions } from 'vuex'
 
