@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 
 import request from '@/functions/request'
 import Swal from 'sweetalert2'
@@ -142,12 +143,28 @@ const actions = {
 
         commit('setSaving', true)
 
+        let formData = new FormData();
+        let i = 1;
+
+        state.files.forEach(file => {
+            
+            formData.append('file' + i, file)
+
+            i++;
+
+        });
+
+        formData.append('tipo_usuario', JSON.stringify(this.getters.getTipoUsuario))
+        formData.append('datos_formulario', JSON.stringify(this.getters.getDatosFormulario))
+        formData.append('matriculas', JSON.stringify(this.getters.getMatriculas))
+        formData.append('number_files', state.files.length)
+        formData.append('number_attachments', state.cantidad_adjuntos)
+
         const data = {
             url: 'registrar_solicitud',
-            data: {
-                tipo_usuario: this.getters.getTipoUsuario,
-                datos_formulario: this.getters.getDatosFormulario,
-                matriculas: this.getters.getMatriculas
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data'
             }
         }
 
@@ -163,16 +180,6 @@ const actions = {
                 })
                 .then(() => {
 
-                    if (state.files.length > 0) {
-                        
-                        dispatch('uploadFile', response.data.data)
-
-                    }else{
-
-                        commit('setSaving', false)
-
-                    }
-
                     commit('setStep', 1)
                     router.push('/')
                     
@@ -185,10 +192,13 @@ const actions = {
                     text: response.data.message,
                     icon: response.data.icon,
                 }).then(() => {
+
                     commit('setSaving', false)
+                    
                 })
 
             }
+            
 
         })
 

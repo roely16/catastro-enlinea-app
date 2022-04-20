@@ -87,7 +87,7 @@
 
 	import Swal from 'sweetalert2'
 	
-	import { mapGetters } from 'vuex'
+	import { mapGetters, mapState } from 'vuex'
 
 	export default {
 		data(){
@@ -135,11 +135,25 @@
 
 					if(this.valid){
 
-						this.$store.commit('setStep', 3)
-
 						this.$store.commit('setDatosFormulario', this.data)
 
 						this.$store.commit('setFiles', this.files)
+
+						if (this.cantidad_adjuntos != this.adjuntos.length) {
+					
+							Swal.fire(
+								'Atención!',
+								'El número de archivos adjuntos no coincide con los solicitados!',
+								'info'
+							)
+
+							return
+
+						}
+
+						this.$store.commit('setStep', 3)
+
+						
 
 					}
 
@@ -162,6 +176,18 @@
 						this.$store.commit('setDatosFormulario', this.data)
 
 						this.$store.commit('setFiles', this.files)
+
+						if (this.cantidad_adjuntos != this.adjuntos.length) {
+							
+							Swal.fire(
+								'Atención!',
+								'El número de archivos adjuntos no coincide con los solicitados!',
+								'info'
+							)
+
+							return
+
+						}
 
 						this.$store.dispatch('createUser')
 
@@ -191,6 +217,10 @@
 			...mapGetters({
 				nombres_adjuntos: 'getNombresAdjuntos',
 				saving: 'getSaving'
+			}),
+			...mapState({
+				cantidad_adjuntos: state => state.registro.cantidad_adjuntos,
+				adjuntos: state => state.registro.files
 			}),
 			pasos_registro(){
 

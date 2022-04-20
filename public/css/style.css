@@ -8,9 +8,6 @@
 ********************************************************************************
 * Import of fonts and icons
 ********************************************************************************/
-@import url("../font/montserrat/stylesheet.css"); /* Font official --------------------*/
-@import url("../font/font-awesome/css/font-awesome.css"); /* Icon family awesome ------*/
-@import url("../font/bitter-web/stylesheet.css");/* Font used for emphasis ------------*/
 @import url("../font/icons-muniguate/style.css"); /* Custom icon ------------------------------*/
 
 /********************************************************************************
