@@ -1,4 +1,6 @@
-# catastro-enlinea-app
+# Aplicación Productos Catastrales en Línea 
+
+Proyecto desarrollado con el objetivo de poner al alcance los vecinos los servicios que brinda la DCAI por medio de la web. 
 
 ## Project setup
 ```
